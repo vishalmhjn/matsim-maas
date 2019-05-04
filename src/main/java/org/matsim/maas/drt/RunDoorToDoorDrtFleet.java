@@ -37,24 +37,28 @@ import org.matsim.vis.otfvis.OTFVisConfigGroup;
  * There are two different examples, one for Mielec and one for the Cottbus scenario.
  * You'll find the corresponding scenarios in the "scenario" folder of the project.
  */
+public class RunDoorToDoorDrtFleet {
 
-// Configuration for multithreaded simulation: (DRT, Global, Parallel Event Handling, Qsim) = (n-1, n-1, 1, 1)
-public class RunDoorToDoorDrtExample {
+    private static final String COTTBUS_DOOR2DOOR_CONFIG = "/Users/vishal/Downloads/input/config.xml";
 
-    private static final String COTTBUS_DOOR2DOOR_CONFIG = "scenarios/cottbus/drtconfig_door2door.xml";
-
-	@SuppressWarnings("unused")
-    private static final String MIELEC_CONFIG = "scenarios/mielec_2014_02/mielec_drt_config.xml";
 
 	public static void run(Config config, boolean otfvis) {
 		//Creates a MATSim Controler and preloads all DRT related packages
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
+		config.controler().setLastIteration(100);
+		//config.qsim().setFlowCapFactor(0.1);
+		//config.qsim().setStorageCapFactor(0.1);
+		config.counts().setCountsScaleFactor(10);
+		config.global().setCoordinateSystem("EPSG:31468");
+		config.planCalcScore().setBrainExpBeta(1);
+		config.planCalcScore().setLearningRate(1);
+		//config.counts().setInputFile("munichCounts.xml");
 
 		Controler controler = DrtControlerCreator.createControlerWithSingleModeDrt(config, otfvis);
 
 
 		//this is optional, adds fares to DRT
-		controler.addOverridingModule(new DrtFareModule());
+		//controler.addOverridingModule(new DrtFareModule());
 
 		//starts the simulation
 		controler.run();
